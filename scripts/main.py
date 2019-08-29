@@ -41,7 +41,7 @@ def main():
     origin_data = loader.load_data(data_name)
 
     # 2.对日期列按日期排序,然后根据时间戳范围，生成完整的时间戳
-    sorter = SortGetTime(origin_data)
+    sorter = SortGetTime(origin_data, date_column)
     sorter.sort()
     sorted_data, first_day, last_day = sorter.get_time()
     sorted_data[date_column] = pd.to_datetime(sorted_data[date_column])
