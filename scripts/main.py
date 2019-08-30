@@ -15,7 +15,8 @@ def merge(date_list, name_list):
 
 
 def generate_week_day(df, date_column, flag="y"):
-    if flag == "y" or "\n":
+    if flag == "y" or flag == "":
+        print("添加day_of_week列...")
         df["day_of_week"] = df[date_column].dt.dayofweek
     else:
         pass
@@ -23,11 +24,36 @@ def generate_week_day(df, date_column, flag="y"):
 
 
 def generate_open(df, target_column, flag="y"):
-    if flag == "y" or "\n":
+    if flag == "y" or flag == "":
+        print("添加open列...")
         df["open"] = np.where(df[target_column] > 0, 1, 0)
     else:
         pass
     return df
+
+
+def feature_process(factory_name, target_column, gap=7):
+    print("正在生成统计学特征：Lag, Mean, Std, Median")
+    for i in range(len(factory_name)):
+        num_list = factory_name[i][target_column]
+        lag_list = [0] * len(factory_name[i])
+        mean_list = [0] * len(factory_name[i])
+        # mean_list = lag_list.copy()
+        std_list = mean_list.copy()
+        median_list = mean_list.copy()
+        j = 0
+        while j < (len(num_list)-gap):
+            lag_list[j+gap] = float(num_list[j:j+1])
+            mean_list[j+gap] = np.mean(num_list[j:j+gap])
+            std_list[j+gap] = np.std(num_list[j:j+gap])
+            median_list[j+gap] = np.median(num_list[j:j+gap])
+            j += 1
+        lag = pd.DataFrame(lag_list, columns=["Lag"])
+        mean = pd.DataFrame(mean_list, columns=["Mean"])
+        std = pd.DataFrame(std_list, columns=["Stdev"])
+        median = pd.DataFrame(median_list, columns=["Median"])
+        old = factory_name[i].reset_index().drop(columns="index")
+        factory_name[i] = pd.concat([old, lag, mean, std, median], axis=1)
 
 
 def main():
@@ -65,8 +91,26 @@ def main():
     generate_week_day(df_total, date_column, week_day_flag)
     open_flag = input("是否需要生成open: y(Default)/n\n")
     generate_open(df_total, target_column, open_flag)
+    print("Filling N/A...")
     df_total = df_total.fillna(0)
     print(df_total.head())
+
+    # 6.特征工程
+    feature_flag = input("是否添加统计学特征: y(Default)/n\n")
+    if feature_flag == "y" or feature_flag == "":
+        period = input("请输入统计学特征间隔时间(Default:7):\n")
+        factory_name = []
+        for i in range(len(name_list)):
+            factory_name.append(df_total[i::len(name_list)])
+        if period == "":
+            feature_process(factory_name, target_column)
+        else:
+            feature_process(factory_name, target_column, int(period))
+        df_total = pd.concat(factory_name, axis=0)
+        df_total = df_total.sort_values(by=[date_column, type_column])
+        df_total = df_total.reset_index().drop(columns="index")
+    else:
+        pass
 
     # 6.导出
     export_name_first = data_name.split(".")[0] + "_out"
@@ -76,6 +120,9 @@ def main():
         df_total.to_excel(export_name, index_label="ID")
     elif export_name_end == "csv":
         df_total.to_csv(export_name, index_label="ID")
+    else:
+        pass
+
 
 if __name__ == "__main__":
     main()
