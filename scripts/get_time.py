@@ -5,5 +5,5 @@ class GetTime(object):
 
     def get_time(self):
         first_day = self.data[self.date_column][0]
-        last_day = self.data[self.date_column][len(self.data[self.date_column])-1]
+        last_day = self.data[self.date_column][len(self.data[self.date_column]) - 1]
         return (self.data, first_day, last_day)

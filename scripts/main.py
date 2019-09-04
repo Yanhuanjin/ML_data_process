@@ -42,11 +42,11 @@ def feature_process(factory_name, target_column, gap=7):
         std_list = mean_list.copy()
         median_list = mean_list.copy()
         j = 0
-        while j < (len(num_list)-gap):
-            lag_list[j+gap] = float(num_list[j:j+1])
-            mean_list[j+gap] = np.mean(num_list[j:j+gap])
-            std_list[j+gap] = np.std(num_list[j:j+gap])
-            median_list[j+gap] = np.median(num_list[j:j+gap])
+        while j < (len(num_list) - gap):
+            lag_list[j + gap] = float(num_list[j:j + 1])
+            mean_list[j + gap] = np.mean(num_list[j:j + gap])
+            std_list[j + gap] = np.std(num_list[j:j + gap])
+            median_list[j + gap] = np.median(num_list[j:j + gap])
             j += 1
         lag = pd.DataFrame(lag_list, columns=["Lag"])
         mean = pd.DataFrame(mean_list, columns=["Mean"])
@@ -57,7 +57,6 @@ def feature_process(factory_name, target_column, gap=7):
 
 
 def main():
-
     # 1.导入文件，确定日期列，填充列，目标列
     data_name = input("请输入要转化的文件全名:(例如:all_in_one.csv)\n")
     date_column = input("请输入日期所在的列名:\n")

@@ -1,4 +1,5 @@
 import pandas as pd
+
 """
 import class
 Usage: 
@@ -6,9 +7,12 @@ myloader = LoadData()
 data = myloader.load_data("target.csv")
 return: pandas data_frame
 """
+
+
 class LoadData(object):
     def __init__(self):
         self.data = None
+
     def load_data(self, data_name):
         """
         :param data_name: input the filename, define the file type
