@@ -22,6 +22,6 @@ In machine learning, feature process like adding statistic features is always ne
 - [./windows/ml_data_process(stand_alone).exe](windows/ml_data_process(stand_alone).exe) **windows-stand_alone version**
 - [./windows/ml_data_process.zip](windows/ml_data_process.zip) **windows-full version(with less bugs)**
 
-Source code: [scripts](data_filling/scripts/)
+Source code: [scripts](scripts/)
 
 Welcome to pull requests.
